@@ -4,7 +4,7 @@ var ClozeCard = function(text, cloze) {
 			this.cloze = cloze; 
 			this.partial = text.replace(cloze, "____________");
 		} else {
-			console.log("error, this cloze does not exist in the text"); 
+			console.log("ERROR! " + cloze + " does not exist in " + text); 
 		};	
 };	
 
