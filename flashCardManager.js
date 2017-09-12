@@ -10,9 +10,15 @@ basicCardsDeck[0] = new BasicCard("hello", "hola");
 basicCardsDeck[1] = new BasicCard("good morning!", "buenos dias!"); 
 basicCardsDeck[2] = new BasicCard("goodnight!", "buenas noches!");
 basicCardsDeck[3] = new BasicCard("I am", "Yo soy") 
+basicCardsDeck[4] = new BasicCard("Chicken", "pollo")
+basicCardsDeck[5] = new BasicCard("Pig", "Cerdo") 
+basicCardsDeck[6] = new BasicCard("Cow", "Vaca")  
 
 clozeCardsDeck[0] = new ClozeCard("Yo soy intelligente", "soy"); 
 clozeCardsDeck[1] = new ClozeCard("Yo estoy en casa", "estoy"); 
+clozeCardsDeck[2] = new ClozeCard("El perro dice 'guao guao!", "perro"); 
+clozeCardsDeck[3] = new ClozeCard("Arroz con pollo", "pollo");
+clozeCardsDeck[4] = new ClozeCard("Cepillarse los dientes", "dientes");  
 
 
 start();
