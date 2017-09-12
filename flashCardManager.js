@@ -2,28 +2,22 @@ var BasicCard = require("./BasicCard.js");
 var ClozeCard = require("./ClozeCard.js"); 
 var inquirer = require("inquirer"); 
 
-var hello = new BasicCard("Hello", "Hola"); 
-var goodMorning = new BasicCard("Good Morning!", "Buenos Dias!"); 
-var goodNight = new BasicCard("Goodnight!", "Buenas Noches!");
-var iAm = new BasicCard("I am (a student)", "Yo soy (un/a estudiante)") 
-
-var soy = new ClozeCard("Yo soy intelligente", "soy"); 
-var estoy = new ClozeCard("Yo estoy en casa", "estoy"); 
-
 var basicCardsDeck = []; 
 var clozeCardsDeck = []; 
 var counter = 0; 
 
-console.log(hello.front); 
-console.log(soy.partial); 
+basicCardsDeck[0] = new BasicCard("hello", "hola"); 
+basicCardsDeck[1] = new BasicCard("good morning!", "buenos dias!"); 
+basicCardsDeck[2] = new BasicCard("goodnight!", "buenas noches!");
+basicCardsDeck[3] = new BasicCard("I am", "Yo soy") 
 
-for(var i = 0; i < basicCardsDeck.length; i++) {
-		console.log("card" + i + ": " + basicCardsDeck[i].front);
-	};
-//start();
-createBasicCard(); 
+clozeCardsDeck[0] = new ClozeCard("Yo soy intelligente", "soy"); 
+clozeCardsDeck[1] = new ClozeCard("Yo estoy en casa", "estoy"); 
 
-//createClozeCard();  
+
+start();
+//createBasicCards(); 
+//createClozeCards();  
 
 function start() {
 	inquirer.prompt([
@@ -31,24 +25,27 @@ function start() {
 		name: "createOrQuiz", 
 		type: "rawlist", 
 		message: "What woud you like to do?",
-		choices: ["CREATE BASIC CARD", "CREATE CLOZE CARD", "QUIZ BASIC CARDS", "QUIZ CLOZE CARDS"]
+		choices: ["CREATE BASIC CARD", "CREATE CLOZE CARD", "QUIZ BASIC CARDS", "QUIZ CLOZE CARDS", "QUIT"]
 	}
 	]).then(function(answer) {
 		if (answer.createOrQuiz.toUpperCase() === "CREATE BASIC CARD") {
 			console.log("You chose to create a basic card!");
-			//createBasicCards(); 
+			createBasicCard(); 
 		}
 		else if (answer.createOrQuiz.toUpperCase() === "CREATE CLOZE CARD") {
 			console.log("you chose to create a cloze card!"); 
-			//createClozeCards(); 
+			createClozeCard(); 
 		}
 		else if (answer.createOrQuiz.toUpperCase() === "QUIZ BASIC CARDS") {
 			console.log("you chose to quiz the basic cards!"); 
-			//quizBasicCards(); 
+			quizBasicCards(); 
 		}
 		else if (answer.createOrQuiz.toUpperCase() === "QUIZ CLOZE CARDS") {
 			console.log("You are going to quiz the cloze cards!");
-			//quizClozeCards(); 
+			quizClozeCards(); 
+		}
+		else {
+			end(); 
 		}
 	});
 }
@@ -59,23 +56,22 @@ function createBasicCard() {
 		{
 			name: "front", 
 			type: "input", 
-			message: "Please type the text for the front of the flashcard: "	
+			message: "FRONT TEXT: "	
 		}, 
 		{
 			name: "back", 
 			type: "input", 
-			message: "Please type the text for the back of the flashcard: "
+			message: "BACK TEXT: "
 		}
 		]).then(function(answer) {
-			var newBasicCard = new BasicCard(answer.front, answer.back); 
-			console.log("new card front: " + newBasicCard.front); 
-			console.log("new card back: " + newBasicCard.back); 
+			var newBasicCard = new BasicCard(answer.front.toLowerCase(), answer.back.toLowerCase()); 
 			basicCardsDeck.push(newBasicCard); 
-			console.log(basicCardsDeck.length); 
-
+			console.log("you have " + basicCardsDeck.length + " basic flashcards in your basic flashcards deck"); 
+			console.log("YOUR BASIC CARDS: ");
 			for(var i = 0; i < basicCardsDeck.length; i++) {
-				console.log("card" + i + ": " + basicCardsDeck[i].front);
+				console.log(basicCardsDeck[i].front + " --- " + basicCardsDeck[i].back);
 			}
+			start(); 
 		});
 }
 
@@ -85,37 +81,80 @@ function createClozeCard() {
 		{
 			name: "text", 
 			type: "input", 
-			message: "Please type the text for the full text of the flashcard: "	
+			message: "FULL TEXT: "	
 		}, 
 		{
 			name: "partial", 
 			type: "input", 
-			message: "Please type the word or phase to hide from the text: "
+			message: "TEXT TO HIDE: "
 		}
 		]).then(function(answer) {
-			var newClozeCard = new ClozeCard(answer.text, answer.partial); 
-			console.log("new card front: " + newClozeCard.fullText); 
-			console.log("new card back: " + newClozeCard.partial); 
+			var newClozeCard = new ClozeCard(answer.text.toLowerCase(), answer.partial.toLowerCase()); 
 			clozeCardsDeck.push(newClozeCard); 
-			//console.log("Cloze Card Array index 0: " + clozeCardsDeck[0].partial)
+			console.log("you have " + clozeCardsDeck.length + " cards in your cloze card deck"); 
+			console.log("YOUR CLOZE CARDS: "); 
+			for (var i = 0; i < clozeCardsDeck.length; i++) {
+				console.log(clozeCardsDeck[i].fullText + " --- " + clozeCardsDeck[i].partial); 
+			}
+			start(); 
 		});
 }
 
 function quizBasicCards() {
-
-	inquirer
-		.prompt(
-		{
-			name: "userAnswer", 
-			type: "input", 
-			message: basicCardsDeck[counter].front
-		}
-		).then(function(answer) {
-			if (answer.userAnswer === basicCardsDeck[counter].back) {
-				console.log("you are correct! the answer is " + basicCardsDeck[counter].back); 
+	if (counter < basicCardsDeck.length) {
+		inquirer
+			.prompt(
+			{
+				name: "userAnswer", 
+				type: "input", 
+				message: basicCardsDeck[counter].front
 			}
-		})
+			).then(function(answer) {
+				if (answer.userAnswer.toLowerCase() === basicCardsDeck[counter].back.toLowerCase()) {
+					console.log("you are correct! the answer is " + basicCardsDeck[counter].back); 
+				}
+				else {
+					console.log("Sorry, the correct answer was " + basicCardsDeck[counter].back);
+				}
+				counter++; 
+				quizBasicCards(); 
+			});
+		}
+		else {
+			counter = 0; 
+			start(); 
+		};
 }
+
+function quizClozeCards() {
+	if (counter < clozeCardsDeck.length) {
+		inquirer
+			.prompt(
+			{
+				name: "userAnswer", 
+				type: "input", 
+				message: clozeCardsDeck[counter].partial
+			}
+			).then(function(answer) {
+				if (answer.userAnswer.toLowerCase() === clozeCardsDeck[counter].cloze.toLowerCase()) {
+					console.log("you are correct! the answer is " + clozeCardsDeck[counter].fullText); 
+				}
+				else {
+					console.log("Sorry, the correct answer was " + clozeCardsDeck[counter].fullText);
+				}
+				counter++; 
+				quizClozeCards(); 
+			});
+		}
+		else {
+			counter = 0; 
+			start(); 
+		};
+}
+
+function end() { 
+	console.log("this session has been terminated");
+};
 
 
 
